@@ -17,6 +17,10 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Activity;
+use App\Models\Driver;
+use App\Models\Trip;
+use App\Models\Vehicle;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,3 +77,79 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('settings', [AdminSettingController::class, 'index'])->name('settings.index');
     Route::post('settings', [AdminSettingController::class, 'update'])->name('settings.update');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Sitemap
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/sitemap.xml', function () {
+    $urls = collect([
+        [
+            'loc' => url('/'),
+            'lastmod' => now()->toDateString(),
+        ],
+        [
+            'loc' => url('/about'),
+            'lastmod' => now()->toDateString(),
+        ],
+        [
+            'loc' => url('/driver'),
+            'lastmod' => now()->toDateString(),
+        ],
+        [
+            'loc' => url('/vehicles'),
+            'lastmod' => now()->toDateString(),
+        ],
+        [
+            'loc' => url('/trips'),
+            'lastmod' => now()->toDateString(),
+        ],
+        [
+            'loc' => url('/activities'),
+            'lastmod' => now()->toDateString(),
+        ],
+        [
+            'loc' => url('/reviews'),
+            'lastmod' => now()->toDateString(),
+        ],
+        [
+            'loc' => url('/contact'),
+            'lastmod' => now()->toDateString(),
+        ],
+    ]);
+
+    foreach (Activity::query()->get(['slug', 'updated_at']) as $item) {
+        $urls->push([
+            'loc' => url('/activities/' . $item->slug),
+            'lastmod' => optional($item->updated_at)->toDateString(),
+        ]);
+    }
+
+    foreach (Driver::query()->get(['slug', 'updated_at']) as $item) {
+        $urls->push([
+            'loc' => url('/driver/' . $item->slug),
+            'lastmod' => optional($item->updated_at)->toDateString(),
+        ]);
+    }
+
+    foreach (Trip::query()->get(['slug', 'updated_at']) as $item) {
+        $urls->push([
+            'loc' => url('/trips/' . $item->slug),
+            'lastmod' => optional($item->updated_at)->toDateString(),
+        ]);
+    }
+
+    foreach (Vehicle::query()->get(['slug', 'updated_at']) as $item) {
+        $urls->push([
+            'loc' => url('/vehicles/' . $item->slug),
+            'lastmod' => optional($item->updated_at)->toDateString(),
+        ]);
+    }
+
+    return response()
+        ->view('sitemap', ['urls' => $urls])
+        ->header('Content-Type', 'application/xml');
+})->name('sitemap');
