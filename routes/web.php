@@ -86,70 +86,99 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 */
 
 Route::get('/sitemap.xml', function () {
+    $baseUrl = rtrim((string) config('app.url', url('/')), '/');
+    if (app()->environment('production') || str_starts_with($baseUrl, 'https://')) {
+        $baseUrl = preg_replace('/^http:\/\//i', 'https://', $baseUrl);
+    }
+
     $urls = collect([
         [
-            'loc' => url('/'),
+            'loc' => $baseUrl,
             'lastmod' => now()->toDateString(),
+            'changefreq' => 'daily',
+            'priority' => '1.0',
         ],
         [
-            'loc' => url('/about'),
+            'loc' => $baseUrl . '/trips',
             'lastmod' => now()->toDateString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.9',
         ],
         [
-            'loc' => url('/driver'),
+            'loc' => $baseUrl . '/driver',
             'lastmod' => now()->toDateString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.9',
         ],
         [
-            'loc' => url('/vehicles'),
+            'loc' => $baseUrl . '/vehicles',
             'lastmod' => now()->toDateString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.8',
         ],
         [
-            'loc' => url('/trips'),
+            'loc' => $baseUrl . '/activities',
             'lastmod' => now()->toDateString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.9',
         ],
         [
-            'loc' => url('/activities'),
+            'loc' => $baseUrl . '/about',
             'lastmod' => now()->toDateString(),
+            'changefreq' => 'monthly',
+            'priority' => '0.7',
         ],
         [
-            'loc' => url('/reviews'),
+            'loc' => $baseUrl . '/reviews',
             'lastmod' => now()->toDateString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.7',
         ],
         [
-            'loc' => url('/contact'),
+            'loc' => $baseUrl . '/contact',
             'lastmod' => now()->toDateString(),
+            'changefreq' => 'monthly',
+            'priority' => '0.7',
         ],
     ]);
 
-    foreach (Activity::query()->get(['slug', 'updated_at']) as $item) {
+    foreach (Trip::where('status', true)->get(['slug', 'updated_at']) as $item) {
         $urls->push([
-            'loc' => url('/activities/' . $item->slug),
+            'loc' => $baseUrl . '/trips/' . $item->slug,
             'lastmod' => optional($item->updated_at)->toDateString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.8',
         ]);
     }
 
-    foreach (Driver::query()->get(['slug', 'updated_at']) as $item) {
+    foreach (Driver::where('status', true)->get(['slug', 'updated_at']) as $item) {
         $urls->push([
-            'loc' => url('/driver/' . $item->slug),
+            'loc' => $baseUrl . '/driver/' . $item->slug,
             'lastmod' => optional($item->updated_at)->toDateString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.8',
         ]);
     }
 
-    foreach (Trip::query()->get(['slug', 'updated_at']) as $item) {
+    foreach (Vehicle::where('status', true)->get(['slug', 'updated_at']) as $item) {
         $urls->push([
-            'loc' => url('/trips/' . $item->slug),
+            'loc' => $baseUrl . '/vehicles/' . $item->slug,
             'lastmod' => optional($item->updated_at)->toDateString(),
+            'changefreq' => 'monthly',
+            'priority' => '0.7',
         ]);
     }
 
-    foreach (Vehicle::query()->get(['slug', 'updated_at']) as $item) {
+    foreach (Activity::where('status', true)->get(['slug', 'updated_at']) as $item) {
         $urls->push([
-            'loc' => url('/vehicles/' . $item->slug),
+            'loc' => $baseUrl . '/activities/' . $item->slug,
             'lastmod' => optional($item->updated_at)->toDateString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.8',
         ]);
     }
 
     return response()
         ->view('sitemap', ['urls' => $urls])
-        ->header('Content-Type', 'application/xml');
+        ->header('Content-Type', 'application/xml; charset=utf-8');
 })->name('sitemap');

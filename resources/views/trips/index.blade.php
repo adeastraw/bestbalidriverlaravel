@@ -1,7 +1,34 @@
 @extends('layouts.app')
 
-@section('title', 'Bali Day Tours & Trips — ' . setting('business_name', 'Best Bali Driver'))
-@section('meta_description', 'Browse our full catalog of Bali day trips and private tours: Ubud waterfalls, East Bali Gates of Heaven, Nusa Penida island tours, and Bedugul sunsets.')
+@section('title', 'Bali Day Tours & Private Sightseeing Trips — ' . setting('business_name', 'Best Bali Driver'))
+@section('meta_description', 'Browse customizable private Bali day tours: Ubud cultural waterfalls, East Bali Lempuyang water palaces, Nusa Penida island tours, and scenic sunset trips.')
+@section('canonical', route('trips.index'))
+@if(request('q'))
+    @section('robots', 'noindex, follow')
+@endif
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Bali Day Tours",
+      "item": "{{ route('trips.index') }}"
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Banner Header -->

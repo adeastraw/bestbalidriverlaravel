@@ -2,6 +2,30 @@
 
 @section('title', 'Meet Our Bali Drivers — ' . setting('business_name', 'Best Bali Driver'))
 @section('meta_description', 'Meet our licensed, professional, and friendly Balinese private drivers. Experienced in safe island navigation, fluent in English, and ready to guide your journey.')
+@section('canonical', route('drivers.index'))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Our Drivers",
+      "item": "{{ route('drivers.index') }}"
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Banner Header -->

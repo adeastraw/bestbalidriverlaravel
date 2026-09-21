@@ -3,6 +3,62 @@
 @section('title', $vehicle->name . ' — Private Car Rental with Driver Bali | ' . setting('business_name', 'Best Bali Driver'))
 @section('meta_description', $vehicle->name . ' with private driver in Bali. Up to ' . $vehicle->capacity . ' passengers. High AC, comfortable seating. Inquire on WhatsApp.')
 @section('og_image', $vehicle->photo_url)
+@section('canonical', route('vehicles.show', $vehicle->slug))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Vehicles",
+          "item": "{{ route('vehicles.index') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{ $vehicle->name }}",
+          "item": "{{ route('vehicles.show', $vehicle->slug) }}"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "{{ route('vehicles.show', $vehicle->slug) }}/#vehicle",
+      "name": "{{ $vehicle->name }} with Private Driver",
+      "image": "{{ $vehicle->photo_url }}",
+      "description": "{{ addslashes(Str::limit($vehicle->description, 250)) }}",
+      "category": "{{ $vehicle->type ?: 'Private Vehicle' }}",
+      "brand": {
+        "@type": "Brand",
+        "name": "{{ explode(' ', $vehicle->name)[0] }}"
+      },
+      "offers": {
+        "@type": "Offer",
+        "availability": "https://schema.org/InStock",
+        "priceCurrency": "IDR",
+        "price": "0",
+        "url": "{{ route('vehicles.show', $vehicle->slug) }}",
+        "seller": {
+          "@id": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}/#agency"
+        }
+      }
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Breadcrumb -->
@@ -23,7 +79,7 @@
                 <!-- Vehicle Gallery -->
                 <div class="lg:col-span-7 space-y-4" x-data="{ activeImage: '{{ $vehicle->photo_url }}' }">
                     <div class="bg-white rounded-3xl overflow-hidden border border-sand-200 shadow-md h-80 sm:h-[450px]">
-                        <img :src="activeImage" alt="{{ $vehicle->name }}" class="w-full h-full object-cover object-center transition-all duration-300">
+                        <img :src="activeImage" alt="{{ $vehicle->name }} - Bali Private Car with Driver" class="w-full h-full object-cover object-center transition-all duration-300">
                     </div>
 
                     <!-- Gallery Thumbnails -->
@@ -32,13 +88,13 @@
                             <button @click="activeImage = '{{ $vehicle->photo_url }}'" 
                                     class="w-20 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all"
                                     :class="activeImage === '{{ $vehicle->photo_url }}' ? 'border-emerald-600 shadow-md scale-105' : 'border-transparent opacity-75 hover:opacity-100'">
-                                <img src="{{ $vehicle->photo_url }}" alt="Primary vehicle photo" class="w-full h-full object-cover">
+                                <img src="{{ $vehicle->photo_url }}" alt="{{ $vehicle->name }} - Primary photo" loading="lazy" class="w-full h-full object-cover">
                             </button>
                             @foreach($vehicle->images as $img)
                                 <button @click="activeImage = '{{ $img->image_url }}'" 
                                         class="w-20 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all"
                                         :class="activeImage === '{{ $img->image_url }}' ? 'border-emerald-600 shadow-md scale-105' : 'border-transparent opacity-75 hover:opacity-100'">
-                                    <img src="{{ $img->image_url }}" alt="{{ $img->alt_text ?: $vehicle->name }}" class="w-full h-full object-cover">
+                                    <img src="{{ $img->image_url }}" alt="{{ $img->alt_text ?: ($vehicle->name . ' - Interior and Exterior Photo') }}" loading="lazy" class="w-full h-full object-cover">
                                 </button>
                             @endforeach
                         </div>

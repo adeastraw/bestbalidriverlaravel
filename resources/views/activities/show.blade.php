@@ -1,8 +1,62 @@
 @extends('layouts.app')
 
-@section('title', $activity->name . ' — Bali Activity | ' . setting('business_name', 'Best Bali Driver'))
+@section('title', $activity->name . ' — Bali Tour Activity & Transport | ' . setting('business_name', 'Best Bali Driver'))
 @section('meta_description', Str::limit($activity->short_description ?: $activity->description, 150))
 @section('og_image', $activity->image_url)
+@section('canonical', route('activities.show', $activity->slug))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Activities",
+          "item": "{{ route('activities.index') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{ $activity->name }}",
+          "item": "{{ route('activities.show', $activity->slug) }}"
+        }
+      ]
+    },
+    {
+      "@type": "TouristAttraction",
+      "@id": "{{ route('activities.show', $activity->slug) }}/#attraction",
+      "name": "{{ $activity->name }}",
+      "description": "{{ addslashes(Str::limit($activity->short_description ?: $activity->description, 250)) }}",
+      "image": "{{ $activity->image_url }}",
+      "touristType": "International Tourists",
+      "provider": {
+        "@id": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}/#agency"
+      }
+      @if($activity->price)
+      ,"offers": {
+        "@type": "Offer",
+        "price": "{{ $activity->price }}",
+        "priceCurrency": "IDR",
+        "availability": "https://schema.org/InStock",
+        "url": "{{ route('activities.show', $activity->slug) }}"
+      }
+      @endif
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Breadcrumb -->
@@ -19,7 +73,7 @@
     <!-- Activity Hero -->
     <div class="relative min-h-[45vh] sm:min-h-[50vh] flex items-end bg-forest-950 overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="{{ $activity->image_url }}" alt="{{ $activity->name }}" class="w-full h-full object-cover object-center">
+            <img src="{{ $activity->image_url }}" alt="{{ $activity->name }} - Bali Adventure Experience" class="w-full h-full object-cover object-center">
             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20"></div>
         </div>
 

@@ -1,7 +1,45 @@
 @extends('layouts.app')
 
-@section('title', 'Contact Us — ' . setting('business_name', 'Best Bali Driver'))
-@section('meta_description', 'Contact Best Bali Driver directly on WhatsApp or by inquiry. Private driver bookings, airport transfers, and custom Bali tour planning.')
+@section('title', 'Contact Us — ' . setting('business_name', 'Best Bali Driver') . ' | Private Driver Inquiries')
+@section('meta_description', 'Contact Best Bali Driver directly via WhatsApp or inquiry form for custom tour quotes, driver availability, and personalized Bali trip planning.')
+@section('canonical', route('contact'))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Contact Us",
+          "item": "{{ route('contact') }}"
+        }
+      ]
+    },
+    {
+      "@type": "ContactPage",
+      "@id": "{{ route('contact') }}/#contact",
+      "url": "{{ route('contact') }}",
+      "name": "Contact {{ setting('business_name', 'Best Bali Driver') }}",
+      "description": "Direct WhatsApp contact and general travel inquiries for private driver services in Bali.",
+      "mainEntity": {
+        "@id": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}/#agency"
+      }
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Banner Header -->
@@ -14,7 +52,7 @@
                 Contact Best Bali Driver
             </h1>
             <p class="text-base sm:text-lg text-cream-200/90 max-w-2xl mx-auto font-light">
-                Reach out to us directly on WhatsApp for instant replies, custom tour quotes, and easy car bookings.
+                Reach out to us directly on WhatsApp for instant replies, custom tour quotes, and private driver inquiries.
             </p>
         </div>
     </div>

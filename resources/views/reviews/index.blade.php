@@ -1,7 +1,31 @@
 @extends('layouts.app')
 
-@section('title', 'Customer Reviews — ' . setting('business_name', 'Best Bali Driver'))
-@section('meta_description', 'Read verified reviews and feedback from travelers who booked private driver tours across Bali with Best Bali Driver.')
+@section('title', 'Traveler Reviews & Feedback — ' . setting('business_name', 'Best Bali Driver'))
+@section('meta_description', 'Read verified reviews and feedback from travelers who toured Bali with our trusted private drivers and local team.')
+@section('canonical', route('reviews.index'))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Customer Reviews",
+      "item": "{{ route('reviews.index') }}"
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Banner Header -->

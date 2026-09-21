@@ -1,7 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Best Bali Driver — Private Driver & Authentic Bali Tours')
-@section('meta_description', 'Experience the real Bali with your own dedicated private driver. Customized day tours, comfortable air-conditioned cars, and instant booking via WhatsApp.')
+@section('title', 'Best Bali Driver — Private Driver in Bali & Custom Day Tours')
+@section('meta_description', 'Discover Bali with a trusted local private driver. Customized day tours, comfortable air-conditioned cars, and personalized island itineraries via WhatsApp.')
+@section('canonical', url('/'))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}/#website",
+  "url": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}",
+  "name": "{{ setting('business_name', 'Best Bali Driver') }}",
+  "description": "Private driver and authentic custom Bali day tour services.",
+  "inLanguage": "en",
+  "publisher": {
+    "@id": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}/#agency"
+  }
+}
+</script>
+@endsection
 
 @section('content')
     <!-- 1. Hero Section -->
@@ -9,7 +27,7 @@
         <!-- Background Image with Overlay -->
         <div class="absolute inset-0 z-0">
             <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=2000&q=85" 
-                 alt="Bali Emerald Rice Terraces" 
+                 alt="Bali Emerald Rice Terraces - Private Driver Tours" 
                  class="w-full h-full object-cover object-center transform scale-105 animate-pulse duration-1000">
             <div class="absolute inset-0 bali-hero-overlay"></div>
         </div>
@@ -22,7 +40,7 @@
             </div>
 
             <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] mb-6">
-                Explore Bali <span class="italic text-emerald-300 font-normal">Your Way</span>
+                Explore Bali with a <span class="italic text-emerald-300 font-normal">Private Driver</span>
             </h1>
 
             <p class="text-lg sm:text-xl text-cream-200/90 max-w-2xl mx-auto leading-relaxed mb-10 font-light">

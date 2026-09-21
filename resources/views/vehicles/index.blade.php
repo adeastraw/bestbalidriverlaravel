@@ -1,7 +1,31 @@
 @extends('layouts.app')
 
-@section('title', 'Our Vehicle Fleet — ' . setting('business_name', 'Best Bali Driver'))
-@section('meta_description', 'Explore our modern, air-conditioned vehicle fleet in Bali. From Toyota Avanza and Innova Reborn to 14-seater Toyota HiAce minibuses.')
+@section('title', 'Clean & Comfortable Bali Vehicle Fleet — ' . setting('business_name', 'Best Bali Driver'))
+@section('meta_description', 'Explore our spotless air-conditioned Bali vehicle fleet: Toyota Avanza, Innova Reborn, and 14-seater Toyota HiAce minibuses with dedicated private driver.')
+@section('canonical', route('vehicles.index'))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Vehicle Fleet",
+      "item": "{{ route('vehicles.index') }}"
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Banner Header -->

@@ -1,7 +1,31 @@
 @extends('layouts.app')
 
-@section('title', 'About Us — ' . setting('business_name', 'Best Bali Driver'))
-@section('meta_description', 'Learn about Best Bali Driver: our local Balinese team, service philosophy, commitment to honest hospitality, and island travel coverage.')
+@section('title', 'About Best Bali Driver — Local Balinese Private Drivers & Travel Team')
+@section('meta_description', 'Learn about Best Bali Driver: our licensed local Balinese drivers, service philosophy, honest hospitality, and custom private tour services across Bali.')
+@section('og_image', 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=1200&q=80')
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "About Us",
+      "item": "{{ route('about') }}"
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Page Header Banner -->

@@ -5,6 +5,10 @@
 @tailwind utilities;
 
 @layer base {
+  [x-cloak] {
+    display: none !important;
+  }
+
   body {
     @apply bg-cream-100 text-sand-900 font-sans antialiased selection:bg-forest-800 selection:text-cream-100;
   }

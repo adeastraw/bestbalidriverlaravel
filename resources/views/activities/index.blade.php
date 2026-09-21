@@ -1,7 +1,31 @@
 @extends('layouts.app')
 
-@section('title', 'Bali Tourist Activities & Adventures — ' . setting('business_name', 'Best Bali Driver'))
-@section('meta_description', 'Book thrilling Bali outdoor activities: Ayung River white water rafting, Mount Batur sunrise trekking, Ubud ATV quad biking, and Nusa Penida snorkeling.')
+@section('title', 'Bali Tourist Activities & Island Adventures — ' . setting('business_name', 'Best Bali Driver'))
+@section('meta_description', 'Discover thrilling Bali outdoor activities: Ayung River white water rafting, Mount Batur sunrise trekking, Ubud ATV quad biking, and Nusa Penida snorkeling with private driver transport.')
+@section('canonical', route('activities.index'))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Bali Activities",
+      "item": "{{ route('activities.index') }}"
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Banner Header -->

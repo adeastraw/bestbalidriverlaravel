@@ -1,8 +1,54 @@
 @extends('layouts.app')
 
-@section('title', $driver->name . ' — Private Driver Bali | ' . setting('business_name', 'Best Bali Driver'))
-@section('meta_description', $driver->name . ': ' . ($driver->short_bio ?: 'Licensed private driver in Bali.') . ' Direct booking via WhatsApp.')
+@section('title', $driver->name . ' — Licensed Private Driver in Bali | ' . setting('business_name', 'Best Bali Driver'))
+@section('meta_description', $driver->name . ': ' . ($driver->short_bio ?: 'Licensed private driver in Bali.') . ' Inquire for custom tours, comfortable vehicles, and personalized itineraries.')
 @section('og_image', $driver->photo_url)
+@section('og_type', 'profile')
+@section('canonical', route('drivers.show', $driver->slug))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Drivers",
+          "item": "{{ route('drivers.index') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{ $driver->name }}",
+          "item": "{{ route('drivers.show', $driver->slug) }}"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "{{ route('drivers.show', $driver->slug) }}/#driver",
+      "name": "{{ $driver->name }}",
+      "jobTitle": "Licensed Private Driver & Bali Tour Guide",
+      "image": "{{ $driver->photo_url }}",
+      "description": "{{ addslashes(Str::limit($driver->short_bio ?: $driver->description, 200)) }}",
+      "worksFor": {
+        "@id": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}/#agency"
+      }
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Breadcrumb -->
@@ -24,7 +70,7 @@
                 <div class="lg:col-span-4">
                     <div class="bg-white rounded-3xl overflow-hidden border border-sand-200 shadow-lg sticky top-28">
                         <div class="relative h-96 w-full bg-forest-950">
-                            <img src="{{ $driver->photo_url }}" alt="{{ $driver->name }}" class="w-full h-full object-cover object-top">
+                            <img src="{{ $driver->photo_url }}" alt="{{ $driver->name }} - Balinese Private Driver" class="w-full h-full object-cover object-top">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                             <div class="absolute bottom-4 left-6 right-6 text-white">
                                 <span class="text-xs uppercase tracking-wider text-emerald-300 font-semibold block">Private Driver</span>

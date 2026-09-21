@@ -3,6 +3,64 @@
 @section('title', $trip->name . ' — Private Bali Tour | ' . setting('business_name', 'Best Bali Driver'))
 @section('meta_description', Str::limit($trip->short_description ?: $trip->description, 150))
 @section('og_image', $trip->hero_image_url)
+@section('og_type', 'article')
+@section('canonical', route('trips.show', $trip->slug))
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Trips",
+          "item": "{{ route('trips.index') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{ $trip->name }}",
+          "item": "{{ route('trips.show', $trip->slug) }}"
+        }
+      ]
+    },
+    {
+      "@type": "TouristTrip",
+      "@id": "{{ route('trips.show', $trip->slug) }}/#trip",
+      "name": "{{ $trip->name }}",
+      "description": "{{ addslashes(Str::limit($trip->short_description ?: $trip->description, 250)) }}",
+      "image": "{{ $trip->hero_image_url }}",
+      "touristType": "International Tourists",
+      @if($trip->duration)
+      "duration": "{{ $trip->duration }}",
+      @endif
+      "provider": {
+        "@id": "{{ rtrim(config('app.url', 'https://bestbalidriver.site'), '/') }}/#agency"
+      }
+      @if($trip->price)
+      ,"offers": {
+        "@type": "Offer",
+        "price": "{{ $trip->price }}",
+        "priceCurrency": "IDR",
+        "availability": "https://schema.org/InStock",
+        "url": "{{ route('trips.show', $trip->slug) }}"
+      }
+      @endif
+    }
+  ]
+}
+</script>
+@endsection
 
 @section('content')
     <!-- Breadcrumb -->
@@ -19,7 +77,7 @@
     <!-- Trip Hero -->
     <div class="relative min-h-[50vh] sm:min-h-[55vh] flex items-end bg-forest-950 overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="{{ $trip->hero_image_url }}" alt="{{ $trip->name }}" class="w-full h-full object-cover object-center">
+            <img src="{{ $trip->hero_image_url }}" alt="{{ $trip->name }} - Bali Day Tour with Private Driver" class="w-full h-full object-cover object-center">
             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20"></div>
         </div>
 
@@ -88,7 +146,7 @@
                                     <div class="bg-white rounded-2xl overflow-hidden border border-sand-200 shadow-sm flex flex-col group">
                                         @if($dest->image)
                                             <div class="h-44 w-full overflow-hidden bg-forest-950">
-                                                <img src="{{ $dest->image_url }}" alt="{{ $dest->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                                <img src="{{ $dest->image_url }}" alt="{{ $dest->name }} - {{ $trip->name }} Bali Tour Destination" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                             </div>
                                         @endif
                                         <div class="p-5 flex-grow">
@@ -253,10 +311,10 @@
                                 <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                                     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.97.53 1.761.814 2.796.814 3.181 0 5.768-2.587 5.768-5.766 0-3.181-2.587-5.766-5.768-5.766zm9.969 5.766c0 5.485-4.485 9.969-9.969 9.969-1.748 0-3.385-.45-4.819-1.238l-5.212 1.331 1.365-4.992c-.878-1.503-1.334-3.238-1.334-5.07 0-5.484 4.485-9.969 9.969-9.969s9.969 4.485 9.969 9.969z"/>
                                 </svg>
-                                <span>Book This Tour on WhatsApp</span>
+                                <span>Inquire About This Tour on WhatsApp</span>
                             </a>
                             <p class="text-center text-[11px] text-sand-500">
-                                Instant confirmation • No upfront deposit required
+                                Direct WhatsApp inquiry • Route consultation & planning
                             </p>
                         </div>
                     </div>
