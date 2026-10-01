@@ -487,6 +487,7 @@ class DatabaseSeeder extends Seeder
                 'review' => 'Wayan was the best driver we could have asked for in Bali! Extremely polite, always on time, and knew all the best viewpoints without tourist crowds. Booking via WhatsApp was effortless.',
                 'trip_id' => $firstTrip ? $firstTrip->id : null,
                 'driver_id' => $wayan ? $wayan->id : null,
+                'image' => 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80',
                 'status' => true,
                 'featured' => true,
             ],
@@ -497,6 +498,7 @@ class DatabaseSeeder extends Seeder
                 'review' => 'Clean car, icy cold air conditioning, and Ketut is a very safe driver. He made our day trip to Bedugul and Tanah Lot completely stress-free with our toddler. Highly recommended!',
                 'trip_id' => null,
                 'driver_id' => $ketut ? $ketut->id : null,
+                'image' => null,
                 'status' => true,
                 'featured' => true,
             ],
@@ -507,6 +509,7 @@ class DatabaseSeeder extends Seeder
                 'review' => 'We booked the East Bali tour for our honeymoon. Made arrived promptly with a sparkling clean Innova, gave us genuine local insights, and took gorgeous photos of us at Tirta Gangga. 10/10!',
                 'trip_id' => null,
                 'driver_id' => $made ? $made->id : null,
+                'image' => 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=80',
                 'status' => true,
                 'featured' => true,
             ],
@@ -517,13 +520,17 @@ class DatabaseSeeder extends Seeder
                 'review' => 'Fantastic private driver service! Transparent prices without any hidden surprises or pushy souvenir stops. We felt genuinely cared for throughout our 10-day holiday in Bali.',
                 'trip_id' => $firstTrip ? $firstTrip->id : null,
                 'driver_id' => $wayan ? $wayan->id : null,
+                'image' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
                 'status' => true,
                 'featured' => true,
             ],
         ];
 
         foreach ($reviewsData as $r) {
-            Review::create($r);
+            Review::updateOrCreate(
+                ['customer_name' => $r['customer_name']],
+                $r
+            );
         }
     }
 }

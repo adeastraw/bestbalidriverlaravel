@@ -59,8 +59,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-cream-100 text-sand-900 flex flex-col min-h-screen">
-    {{-- Premium Website Testing Notice --}}
-    @include('components.testing-notice')
+    {{-- Service Notice / Website Maintenance Notice (Controlled via Admin Settings) --}}
+    @if(setting('service_notice_enabled', '0') == '1')
+        @include('components.testing-notice')
+    @endif
 
     {{-- Header / Navbar --}}
     @include('components.navbar')

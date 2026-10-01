@@ -8,6 +8,7 @@ use App\Models\Review;
 use App\Models\Trip;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ReviewController extends Controller
@@ -34,6 +35,7 @@ class ReviewController extends Controller
             'review' => 'required|string',
             'driver_id' => 'nullable|exists:drivers,id',
             'trip_id' => 'nullable|exists:trips,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'status' => 'nullable|boolean',
             'featured' => 'nullable|boolean',
         ]);
@@ -41,9 +43,13 @@ class ReviewController extends Controller
         $validated['status'] = $request->has('status');
         $validated['featured'] = $request->has('featured');
 
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('reviews', 'public');
+        }
+
         Review::create($validated);
 
-        return redirect()->route('admin.reviews.index')->with('success', 'Customer review recorded successfully.');
+        return redirect()->route('admin.reviews.index')->with('success', 'Customer review with travel photo recorded successfully.');
     }
 
     public function edit(Review $review): View
@@ -62,6 +68,8 @@ class ReviewController extends Controller
             'review' => 'required|string',
             'driver_id' => 'nullable|exists:drivers,id',
             'trip_id' => 'nullable|exists:trips,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'remove_image' => 'nullable|boolean',
             'status' => 'nullable|boolean',
             'featured' => 'nullable|boolean',
         ]);
@@ -69,6 +77,23 @@ class ReviewController extends Controller
         $validated['status'] = $request->has('status');
         $validated['featured'] = $request->has('featured');
 
+        // Handle photo removal
+        if ($request->boolean('remove_image')) {
+            if ($review->image && !str_starts_with($review->image, 'http')) {
+                Storage::disk('public')->delete($review->image);
+            }
+            $validated['image'] = null;
+        }
+
+        // Handle new photo upload
+        if ($request->hasFile('image')) {
+            if ($review->image && !str_starts_with($review->image, 'http')) {
+                Storage::disk('public')->delete($review->image);
+            }
+            $validated['image'] = $request->file('image')->store('reviews', 'public');
+        }
+
+        unset($validated['remove_image']);
         $review->update($validated);
 
         return redirect()->route('admin.reviews.index')->with('success', 'Review updated successfully.');
@@ -76,6 +101,10 @@ class ReviewController extends Controller
 
     public function destroy(Review $review): RedirectResponse
     {
+        if ($review->image && !str_starts_with($review->image, 'http')) {
+            Storage::disk('public')->delete($review->image);
+        }
+
         $review->delete();
         return redirect()->route('admin.reviews.index')->with('success', 'Review deleted successfully.');
     }

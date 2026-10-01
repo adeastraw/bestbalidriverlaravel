@@ -14,56 +14,69 @@
         </div>
 
         <div class="bg-white rounded-2xl border border-sand-200 shadow-sm overflow-hidden">
-            <table class="w-full text-left text-sm">
-                <thead class="bg-sand-50 border-b border-sand-200 text-xs font-semibold text-sand-600 uppercase tracking-wider">
-                    <tr>
-                        <th class="p-4">Vehicle</th>
-                        <th class="p-4">Type</th>
-                        <th class="p-4">Capacity</th>
-                        <th class="p-4">Gallery Images</th>
-                        <th class="p-4 text-center">Status</th>
-                        <th class="p-4 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-sand-100">
-                    @forelse($vehicles as $vehicle)
-                        <tr class="hover:bg-cream-50 transition-colors">
-                            <td class="p-4 flex items-center gap-3">
-                                <img src="{{ $vehicle->photo_url }}" alt="{{ $vehicle->name }}" class="w-12 h-9 rounded-lg object-cover">
-                                <span class="font-bold text-forest-900">{{ $vehicle->name }}</span>
-                            </td>
-                            <td class="p-4 text-sand-700">{{ $vehicle->type ?: '—' }}</td>
-                            <td class="p-4 text-sand-700 text-xs">
-                                Up to {{ $vehicle->capacity }} seats ({{ $vehicle->luggage_capacity ?: '0' }} luggage)
-                            </td>
-                            <td class="p-4 text-sand-700 text-xs">
-                                {{ $vehicle->images_count }} photos
-                            </td>
-                            <td class="p-4 text-center">
-                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $vehicle->status ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
-                                    {{ $vehicle->status ? 'Active' : 'Hidden' }}
-                                </span>
-                            </td>
-                            <td class="p-4 text-right space-x-2">
-                                <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="text-xs font-semibold text-emerald-700 hover:underline">
-                                    Edit
-                                </a>
-                                <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this vehicle?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-xs font-semibold text-rose-600 hover:underline">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
+            <!-- Mobile Swipe Hint -->
+            <div class="sm:hidden px-4 py-2 bg-sand-50/90 border-b border-sand-200/80 text-[11px] text-sand-600 flex items-center justify-between">
+                <span class="flex items-center gap-1.5 font-medium">
+                    <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                    </svg>
+                    Geser tabel ke kanan untuk melihat & mengedit aksi
+                </span>
+                <span class="text-sand-400 text-[10px] font-semibold uppercase">Swipe →</span>
+            </div>
+
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-left text-sm min-w-[680px]">
+                    <thead class="bg-sand-50 border-b border-sand-200 text-xs font-semibold text-sand-600 uppercase tracking-wider">
                         <tr>
-                            <td colspan="6" class="p-8 text-center text-sand-500">No vehicles found. Click "+ Add New Vehicle" to add one.</td>
+                            <th class="p-4">Vehicle</th>
+                            <th class="p-4">Type</th>
+                            <th class="p-4">Capacity</th>
+                            <th class="p-4">Gallery Images</th>
+                            <th class="p-4 text-center">Status</th>
+                            <th class="p-4 text-right whitespace-nowrap">Actions</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="divide-y divide-sand-100">
+                        @forelse($vehicles as $vehicle)
+                            <tr class="hover:bg-cream-50 transition-colors">
+                                <td class="p-4 flex items-center gap-3 min-w-[200px]">
+                                    <img src="{{ $vehicle->photo_url }}" alt="{{ $vehicle->name }}" class="w-12 h-9 rounded-lg object-cover flex-shrink-0">
+                                    <span class="font-bold text-forest-900">{{ $vehicle->name }}</span>
+                                </td>
+                                <td class="p-4 text-sand-700 whitespace-nowrap">{{ $vehicle->type ?: '—' }}</td>
+                                <td class="p-4 text-sand-700 text-xs whitespace-nowrap">
+                                    Up to {{ $vehicle->capacity }} seats ({{ $vehicle->luggage_capacity ?: '0' }} luggage)
+                                </td>
+                                <td class="p-4 text-sand-700 text-xs whitespace-nowrap">
+                                    {{ $vehicle->images_count }} photos
+                                </td>
+                                <td class="p-4 text-center whitespace-nowrap">
+                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $vehicle->status ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
+                                        {{ $vehicle->status ? 'Active' : 'Hidden' }}
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right space-x-2 whitespace-nowrap">
+                                    <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="inline-block px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-xs font-semibold text-emerald-700 transition-colors">
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this vehicle?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-xs font-semibold text-rose-600 transition-colors">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="p-8 text-center text-sand-500">No vehicles found. Click "+ Add New Vehicle" to add one.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div>

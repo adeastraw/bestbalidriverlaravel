@@ -32,13 +32,13 @@
             @csrf
             <div>
                 <label for="email" class="block text-xs font-bold text-sand-700 uppercase tracking-wider mb-1.5">Email Address</label>
-                <input type="email" name="email" id="email" value="{{ old('email', 'admin@bestbalidriver.com') }}" required 
+                <input type="email" name="email" id="email" value="{{ old('email') }}" required placeholder="admin@example.com"
                        class="w-full rounded-xl border-sand-300 focus:border-emerald-600 focus:ring-emerald-600 text-sm">
             </div>
 
             <div>
                 <label for="password" class="block text-xs font-bold text-sand-700 uppercase tracking-wider mb-1.5">Password</label>
-                <input type="password" name="password" id="password" required 
+                <input type="password" name="password" id="password" required placeholder="••••••••"
                        class="w-full rounded-xl border-sand-300 focus:border-emerald-600 focus:ring-emerald-600 text-sm">
             </div>
 
@@ -54,11 +54,6 @@
                 Sign In to Dashboard
             </button>
         </form>
-
-        <div class="p-3 rounded-xl bg-cream-100 border border-sand-200 text-center text-xs text-sand-600">
-            <span class="block font-medium text-forest-900">Default Admin Credentials:</span>
-            <span>admin@bestbalidriver.com / password</span>
-        </div>
 
         <div class="text-center">
             <a href="{{ route('home') }}" class="text-xs text-emerald-700 hover:underline">
